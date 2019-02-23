@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.freecharge.wiremock</groupId>
-    <artifactId>FreechargeMock</artifactId>
+    <groupId>com.kkpravee.wiremock</groupId>
+    <artifactId>MockServices</artifactId>
     <version>1.0.0</version>
-    <name>Freecharge services mock</name>
-    <description>To mock the freecharge services using over-the-client to a WireMock server.</description>
+    <name>Kkpravee services mock</name>
+    <description>To mock the rest services using over-the-client to a WireMock server.</description>
 
     <properties>
         <jdk.version>1.8</jdk.version>
@@ -18,6 +18,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
