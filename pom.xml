@@ -7,6 +7,17 @@
     <name>Kkpravee services mock</name>
     <description>To mock the rest services using over-the-client to a WireMock server.</description>
 
+    <developers>
+        <developer>
+            <name>Praveen Kumar DN</name>
+            <url>https://github.com/PraveenKumarDN</url>
+            <id>praveen.kumar</id>
+            <roles>
+                <role>Owner</role>
+            </roles>
+        </developer>
+    </developers>
+
     <properties>
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,7 +53,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.13.1</version>
+            <version>6.14.3</version>
         </dependency>
 
         <dependency>
@@ -50,7 +61,14 @@
             <artifactId>wiremock</artifactId>
             <version>2.16.0</version>
         </dependency>
-    </dependencies>
+
+        <dependency>
+            <groupId>com.relevantcodes</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>2.41.2</version>
+        </dependency>
+   </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -67,8 +85,65 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/SuiteXMLs/TestNg.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
             </plugin>
+
+
+
+
+
+
+
+
+
+
+    <plugin>
+        <groupId>ch.fortysix</groupId>
+        <artifactId>maven-postman-plugin</artifactId>
+        <version>0.1.6</version>
+        <executions>
+            <execution>
+                <id>send_an_email</id>
+                <phase>deploy</phase>
+                <goals>
+                    <goal>send-mail</goal>
+                </goals>
+                <inherited>true</inherited>
+                <configuration>
+                    <mailhost>smtp.gmail.com</mailhost>
+                    <mailport>995</mailport>
+                    <mailssl>true</mailssl>
+                    <mailAltConfig>true</mailAltConfig>
+                    <mailuser>praveen.dn023@gmail.com</mailuser>
+                    <mailpassword>mypassowrd</mailpassword>
+
+                    <from>myemailid@mycompany.com</from>
+                    <receivers>
+                        <receiver>praveen.dn023@gmail.com</receiver>
+                        <receiver>myemailid@gmail.com</receiver>
+                    </receivers>
+
+                    <subject>Test Automation Report</subject>
+                    <failonerror>false</failonerror>
+                    <htmlMessage>
+                        <![CDATA[
+                    <p>Partner, we have a new deployment!</p>
+                    <br>
+                    <p>Have a nice day.</p>
+                    ]]>
+                    </htmlMessage>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+
         </plugins>
     </build>
+
+
 </project>
 

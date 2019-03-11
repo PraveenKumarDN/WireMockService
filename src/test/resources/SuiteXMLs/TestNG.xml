@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Kkpravee Learning Test Suite" verbose="3">
+    <listeners>
+        <listener class-name="com.kkpravee.framework.Listeners.FExtentReportListener"/>
+    </listeners>
+
+    <test name="Extent report learning tests1">
+        <classes>
+            <class name="com.kkpravee.tests.TestingClass1"/>
+            <class name="com.kkpravee.tests.TestingClass2"/>
+        </classes>
+    </test>
+
+    <test name="Extent report learning tests2">
+        <classes>
+            <class name="com.kkpravee.tests.TestingClass3"/>
+        </classes>
+    </test>
+</suite>
