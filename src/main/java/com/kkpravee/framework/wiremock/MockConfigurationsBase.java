@@ -55,13 +55,13 @@ public class MockConfigurationsBase{
 
         //verbose logging by wiremock custom console notifier
         Notifier notifier = new ConsoleNotifier(true);
-        WireMockConfiguration.wireMockConfig().notifier(notifier);
+        WireMockConfiguration.wireMockConfig().notifier(notifier).extensions(new com.kkpravee.framework.wiremock.BodyTransformer());
 
         restTemplate = new RestTemplate();
 
         //Start the wiremock server on configured ip and port.
         wireMockServer = new WireMockServer();
-        wireMockServer.start();
+        //wireMockServer.start();
         configureFor(mockIp, Integer.parseInt(mockPort));
         defaultCatchAllStubs() ;
     }

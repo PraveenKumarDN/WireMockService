@@ -376,4 +376,63 @@ public class MockServicesStubBase extends MockConfigurationsBase{
                         .withBody(jsonStringResponse)) ;
         stubs.add(stubFor(stub));
     }
+
+    /**
+     * @param urlPath
+     * @param responseStatusCode
+     * @param responseStatusMessage
+     * @param jsonStringResponse
+     * This static method stubs the get urlpath for json string response with status and message.
+     */
+    public static void getUrlRequestMatchResponseCustom(String urlPath, int responseStatusCode, String responseStatusMessage, String jsonStringResponse){
+        MappingBuilder stub = get(urlEqualTo(urlPath))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .proxiedFrom("http://wiremock.org/")) ;
+        stubs.add(stubFor(stub));
+    }
+
+    public static void postUrlRequestMatchResponseCustom(String urlPath, String jsonStringRequestBody, int responseStatusCode, String responseStatusMessage, String jsonStringResponse){
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .withRequestBody(equalToJson(jsonStringRequestBody, Constants.BOOLEAN_FALSE, Constants.BOOLEAN_FALSE))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withBody(jsonStringResponse)) ;
+        stubs.add(stubFor(stub));
+    }
+
+    public static void postUrlRequestMatchResponseCustom1(String urlPath, String jsonStringRequestBody, int responseStatusCode, String responseStatusMessage, String jsonStringResponse){
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .withRequestBody(equalToJson(jsonStringRequestBody, Constants.BOOLEAN_FALSE, Constants.BOOLEAN_FALSE))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withBody(jsonStringResponse)
+                        .withTransformers("body-transformer")) ;
+        stubs.add(stubFor(stub));
+    }
+
+    public static void postUrlRequestMatchResponseCustomRandomIntGen(String urlPath, String jsonStringRequestBody, int responseStatusCode, String responseStatusMessage, String jsonStringResponse){
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .withRequestBody(equalToJson(jsonStringRequestBody, Constants.BOOLEAN_TRUE, Constants.BOOLEAN_TRUE))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withBody(jsonStringResponse)
+                        .withTransformers("body-transformer")) ;
+        stubs.add(stubFor(stub));
+    }
+
+    public static void postUrlRequestMatchResponseCustomRandomIntGen1(String urlPath, int responseStatusCode, String responseStatusMessage, String jsonStringResponse) {
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withBody(jsonStringResponse)
+                        .withTransformers("body-transformer"));
+        stubs.add(stubFor(stub));
+    }
+
 }
