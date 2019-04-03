@@ -2,11 +2,12 @@ package com.kkpravee.wiremock;
 
 
 import com.kkpravee.framework.wiremock.MockConfigurationsBase;
+import com.kkpravee.framework.wiremock.MockServicesStubBase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static com.kkpravee.framework.wiremock.MockServicesStubBase.postUrlRequestMatchResponseCustom1;
+import static com.kkpravee.framework.wiremock.MockServicesStubBase.postUrlRequestResponseBodyEqualsTransform;
 
 public class ResponseTransformations extends MockConfigurationsBase {
     private String url;
@@ -31,26 +32,22 @@ public class ResponseTransformations extends MockConfigurationsBase {
         String jsonStringRequestBody = "{\"smstext\":\"pp1234567890123456789\",\"result\":\"09243523789\"}";
         String jsonStringResponse = "{\"code\":\"00\",\"result\":\"$(result)\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpa\":true}";
 
-        postUrlRequestMatchResponseCustom1(urlPath, jsonStringRequestBody, responseStatusCode, responseStatusMessage, jsonStringResponse) ;
+        postUrlRequestResponseBodyEqualsTransform(urlPath, jsonStringRequestBody, responseStatusCode, responseStatusMessage, jsonStringResponse) ;
 
         System.out.println("success");
+    }
 
-        /*StubMapping stubMapping;
-        stubMapping = stubFor(post(urlEqualTo("/test?foo=bar"))
-                        .willReturn(aResponse()
-                                .withStatus(200)
-                                .withHeader("content-type", "application/json")
-                                .withBody("{\"foo\": \"$(foo)\"}")
-                                .withTransformers("body-transformer")));
+    @Test
+    public void testResponseTransformations2() {
+        int responseStatusCode = 200 ;
+        String responseStatusMessage = "OK" ;
 
-        given()
-                .contentType("application/json")
-                .when()
-                .get("/test?foo=bar")
-                .then()
-                .statusCode(200)
-                .body("foo",equalTo("bar"));
+        String jsonStringRequestBody = "{\"smstext\":\"pp1234567890123456789\",\"result\":\"09243523789\"}";
+        String jsonStringResponse = "{\"code\":\"00\",\"result\":\"$(result)\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpa\":true}";
+        String jsonStringResponse1 = "{\"randomNumber\":$(!RandomInteger), \"got\":\"it\"}" ;
 
-        verify(getRequestedFor(urlEqualTo("/test?foo=bar")));*/
+        MockServicesStubBase.postUrlResponseRandomIntGen(urlPath, responseStatusCode, responseStatusMessage, jsonStringResponse1) ;
+
+        System.out.println("success");
     }
 }
