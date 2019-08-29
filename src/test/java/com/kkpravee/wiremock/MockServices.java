@@ -32,10 +32,10 @@ public class MockServices extends MockServicesStubBase {
         headerValue = "application/json";
         queryParam = "query";
         queryParamValue = "queryValue" ;
-        requestBodyEquals = "{\"smstext\":\"pp1234567890123456789\",\"registration\":\"09243523789\",\"name\":\"Praveen Kumar\",\"type\":\"MOB\"}";
-        requestBodyContains = "{\"smstext\":\"pp1234567890123456789\",\"registration\":\"09243523789\"}";
+        requestBodyEquals = "{\"key1\":\"value1\",\"key2\":\"value2\",\"name\":\"Praveen Kumar\",\"key3\":\"ASDF\"}";
+        requestBodyContains = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
         responseStatusMessage = "OK";
-        responseBody = "{\"code\":\"00\",\"result\":\"success\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpa\":true}";
+        responseBody = "{\"responseid\":\"10\",\"result\":\"success\",\"asdfgh\":true}";
         responseStatusCode = 200;
         url = null;
     }
