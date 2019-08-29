@@ -22,7 +22,7 @@ For more thearetical info. please refer the blog: https://kkpravee023tech.blogsp
 
 
 Implementation steps:
-Implementation for Initialisation(Configuration/Start/Stub methods) and deinitialisation(Unstub/Stop) of wiremock services are handled in QE-Framework. Just you need to extend the same in your project stubbing class.
+Implementation for Initialisation(Configuration/Start/Stub methods) and deinitialisation(Unstub/Stop) of wiremock services could be handled in generic framework. Just you need to extend the same in your project stubbing class.
 
 Changes to be done in the maven project:
 
@@ -40,8 +40,8 @@ Step2:
 Include the mockIp and mockPort config properties in env.properties file of project classpath.
 i.e.
 src/test/resources/config/env.properties
-mockIp = 10.251.32.153
-mockPort = 8080
+mockIp = xx.xxx.xx.xxx
+mockPort = yyyy
 
 
 
@@ -49,9 +49,9 @@ Step3:
 In BeforeSuite method, include initMockServices() as shown below:
 @BeforeSuite(alwaysRun = true)
 public void beforeSuite() throws Exception {
-      loadEnvironment();
-      testDataInitializer();
-      clientInitialization();
+      loadEnvironmentData();
+      testDataInitialization();
+      clientDataInitialization();
       initMockServices();
 }
 
@@ -88,7 +88,7 @@ public static void stubServices(){
 
 public static void deInitMockServices(){
 
-       //removes the stubs and stop the wiremock server(Handled in QE-Framework)
+       //removes the stubs and stop the wiremock server(Handle in generic framework)
        unMockServicesAndStop();
   }
 }
@@ -99,7 +99,7 @@ Step5:
 In AfterSuite method, include deInitMockServices() as shown below:
 @AfterSuite(alwaysRun = true)
 public void afterSuite() throws Exception {
-       imsDBUtils.closeDBConnection();
+       closeDBConnections();
        deInitMockServices();
 }
 
@@ -109,38 +109,35 @@ public void afterSuite() throws Exception {
 Lets illustrate the above stubServices method by considering one rest end point service that should be mocked.
 Required api service details to be mocked:
 Http Method: POST
-Http Uri: http://10.251.32.153:8080/v1/wiremock/test/registerSignUp
+Http Uri: http://xx.xxx.xx.xxx:yyyy/v1/wiremock/test/resource
 Http Headers: 
 Content-Type: application/json
 Http RequestBody:
 {
-"smstext": "pp1234567890123456789",
-"registration": "09243523789",
+"key1": "value1",
+"key2": "value2",
 "name": "Praveen Kumar",
-"type": "MOB"
+"key3": "ASDFQWERT"
 }
 Http Response:
 Response with status "200 OK":
 {
-"code": "00",
-"result": "success",
-"metadata": "",
-"customerBankAccounts": "1234",
-"vpaCreated": true
+"responseId": "12345678",
+"result": "success"
 }
 
 Java version of stubbing above required service:
 public static void stubServices(){
 
      //Construct the above api details
-      String urlPath: "/v1/wiremock/test/registerSignUp" ;
+      String urlPath: "/v1/wiremock/test/resource" ;
       String headerKey = "Content-Type" ;
       String headerValue = "application/json" ;
-      String requestBodyEquals = "{\"smstext\":\"pp1234567890123456789\",\"registration\":\"09243523789\",\"name\":\"Praveen Kumar\",\"type\":\"MOB\"}";
-      String requestBodyContains = "{\"smstext\":\"pp1234567890123456789\",\"registration\":\"09243523789\"}";
+      String requestBodyEquals = "{\"key1\":\"value1\",\"key2\":\"value2\",\"name\":\"Praveen Kumar\",\"key3\":\"ASDFQWERT\"}";
+      String requestBodyContains = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
       int responseStatusCode = 200 ;
       String responseStatusMessage = "OK" ;
-      String responseBody: "{\"code\":\"00\",\"result\":\"success\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpaCreated\":true}" ;           
+      String responseBody: "{\"responseId\":\"12345678\",\"result\":\"success\"}" ;           
 
       //Call the suitable static methods as per api service requirement as below which will mock the service.
 
@@ -152,7 +149,7 @@ public static void stubServices(){
 
 Note:
 
-All the stub mappings could be found here: http://10.251.32.153:8080/__admin/mappings  
+All the stub mappings could be found here: http://xx.xxx.xx.xxx:yyyy/__admin/mappings  
 
 
 
@@ -178,22 +175,22 @@ Include the wiremock body transformation dependency in pom.xml:
 Step3:
 
 Instantiate the Wiremock server with the BodyTransformer instance:
-WireMockConfiguration.wireMockConfig().notifier(notifier).extensions(new com.snapdeal.automation.fwk.utilities.BodyTransformer());
+WireMockConfiguration.wireMockConfig().notifier(notifier).extensions(new com.kkpravee.Transformer.BodyTransformer());
 
-Now from above setup of wiremock and BobyTransformer, we are good to handle the dynamic request-response stubs. All the required classes and methods are handled in the QE-Framework.
+Now from above setup of wiremock and BobyTransformer, we are good to handle the dynamic request-response stubs. All the required classes and methods should be handled in Generic framework.
 
 
 Illustration of ResponseBodyTransformation cases:
 Case1: The same requested input value would be returned in the response upon execution of api
 public static void stubDynamicRequestResponseServices(){
 //Construct the above api details
-String urlPath: "/v1/wiremock/test/registerSignUp" ;
+String urlPath: "/v1/wiremock/test/resource" ;
 String headerKey = "Content-Type" ;
 String headerValue = "application/json" ;
-String requestBody = "{\"smstext\":\"pp1234567890123456789\",\"registration\":\"09243523789\",\"name\":\"Praveen Kumar\",\"type\":\"MOB\"}";
+String requestBody = "{\"key1\":\"value1\",\"key2\":\"value2\",\"name\":\"Praveen Kumar\",\"key3\":\"value3\"}";
 int responseStatusCode = 200 ;
 String responseStatusMessage = "OK" ;
-String responseBody: "{\"registration\":\"$(registration)\",\"result\":\"success\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpaCreated\":true}" ;
+String responseBody: "{\"key1\":\"$(key1)\",\"result\":\"success\"}" ;
 
 //Call the suitable static methods as per api service requirement as below which will mock the service.
 postUrlHeaderRequestResponseBodyEqualsTransform(urlPath, headerKey, headerValue, jsonStringRequestBody, responseStatusCode, responseStatusMessage, jsonStringResponse) ;
@@ -202,13 +199,13 @@ postUrlHeaderRequestResponseBodyEqualsTransform(urlPath, headerKey, headerValue,
 Case2: Dynamically random integer value would be returned in the response upon execution of api:
 public static void stubDynamicRequestResponseRandomIntGen(){
 //Construct the above api details
-String urlPath: "/v1/wiremock/test/registerSignUp" ;
+String urlPath: "/v1/wiremock/test/resource" ;
 String headerKey = "Content-Type" ;
 String headerValue = "application/json" ;
-String requestBody = "{\"smstext\":\"pp1234567890123456789\",\"registration\":\"09243523789\",\"name\":\"Praveen Kumar\",\"type\":\"MOB\"}";
+String requestBody = "{\"key1\":\"value1\",\"key2\":\"value2\",\"name\":\"Praveen Kumar\",\"key3\":\"value3\"}";
 int responseStatusCode = 200 ;
 String responseStatusMessage = "OK" ;
-String responseBody: "{\"dynamicRandomNumber\":$(!RandomInteger),\"customerBankAccounts\":\"1234\",\"vpaCreated\":true}" ;
+String responseBody: "{\"dynamicRandomNumber\":$(!RandomInteger),\"responseid\":\"1234\",\"responseTrueOrFalse\":true}" ;
 
 //Call the suitable static methods as per api service requirement as below which will mock the service.
 postUrlHeaderRequestResponseBodyEqualsTransform(urlPath, headerKey, headerValue, jsonStringRequestBody, responseStatusCode, responseStatusMessage, jsonStringResponse) ;
