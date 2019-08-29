@@ -29,8 +29,8 @@ public class ResponseTransformations extends MockConfigurationsBase {
         int responseStatusCode = 200 ;
         String responseStatusMessage = "OK" ;
 
-        String jsonStringRequestBody = "{\"smstext\":\"pp1234567890123456789\",\"result\":\"09243523789\"}";
-        String jsonStringResponse = "{\"code\":\"00\",\"result\":\"$(result)\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpa\":true}";
+        String jsonStringRequestBody = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
+        String jsonStringResponse = "{\"responseId\":\"123456\",\"result\":\"$(result)\",\"uniqueId\":true}";
 
         postUrlRequestResponseBodyEqualsTransform(urlPath, jsonStringRequestBody, responseStatusCode, responseStatusMessage, jsonStringResponse) ;
 
@@ -42,8 +42,8 @@ public class ResponseTransformations extends MockConfigurationsBase {
         int responseStatusCode = 200 ;
         String responseStatusMessage = "OK" ;
 
-        String jsonStringRequestBody = "{\"smstext\":\"pp1234567890123456789\",\"result\":\"09243523789\"}";
-        String jsonStringResponse = "{\"code\":\"00\",\"result\":\"$(result)\",\"metadata\":\"\",\"customerBankAccounts\":\"1234\",\"vpa\":true}";
+        String jsonStringRequestBody = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
+        String jsonStringResponse = "{\"responseId\":\"123456\",\"result\":\"$(result)\",\"uniqueId\":true}";
         String jsonStringResponse1 = "{\"randomNumber\":$(!RandomInteger), \"got\":\"it\"}" ;
 
         MockServicesStubBase.postUrlResponseRandomIntGen(urlPath, responseStatusCode, responseStatusMessage, jsonStringResponse1) ;
