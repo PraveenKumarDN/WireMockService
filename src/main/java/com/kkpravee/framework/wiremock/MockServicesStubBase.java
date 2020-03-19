@@ -1,6 +1,7 @@
 package com.kkpravee.framework.wiremock;
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import resources.utils.Constants;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -10,6 +11,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
@@ -588,4 +590,64 @@ public class MockServicesStubBase extends MockConfigurationsBase{
         stubs.add(stubFor(stub));
     }
 
+    /**
+     * @param urlPath
+     * @param xmlStringRequestBody
+     * @param responseStatusCode
+     * @param responseStatusMessage
+     * @param xmlStringResponse
+     * This static method stubs the request for response with body transformation in which required random integer will be generated and interpolated in response by
+     * ignoring the array order and extra elements if present in xml request body.
+     */
+    public static void postUrlRequestResponseBodyMatchInterpolationXml(String urlPath, String xmlStringRequestBody, int responseStatusCode, String responseStatusMessage, String xmlStringResponse){
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .withRequestBody(containing(xmlStringRequestBody))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withHeader("content-type", "application/xml")
+                        .withBody(xmlStringResponse)
+                        .withTransformers("body-transformer")) ;
+        stubs.add(stubFor(stub));
+    }
+
+    /**
+     * @param urlPath
+     * @param responseStatusCode
+     * @param responseStatusMessage
+     * @param soapXmlStringResponse
+     * This static method stubs the request for response with body transformation in which required random integer will be generated and interpolated in response by
+     * ignoring the array order and extra elements if present in soap xml request body.
+     */
+    public static void postUrlIgnoreRequestMatchResponseBodyInterpolateSoapXml(String urlPath, int responseStatusCode, String responseStatusMessage, String soapXmlStringResponse){
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withHeader("content-type", "application/soap+xml")
+                        .withBody(soapXmlStringResponse)
+                        .withTransformers("body-transformer")) ;
+        stubs.add(stubFor(stub));
+    }
+
+    /**
+     * @param urlPath
+     * @param soapXmlStringRequestBody
+     * @param responseStatusCode
+     * @param responseStatusMessage
+     * @param soapXmlStringResponse
+     * This static method stubs the request for response with body transformation in which required random integer will be generated and interpolated in response by
+     * ignoring the array order and extra elements if present in soap xml request body.
+     */
+    public static void postUrlRequestResponseBodyMatchInterpolateSoapXml(String urlPath, String soapXmlStringRequestBody, int responseStatusCode, String responseStatusMessage, String soapXmlStringResponse){
+        MappingBuilder stub = post(urlMatching(urlPath))
+                .withRequestBody(containing(soapXmlStringRequestBody))
+                .willReturn(aResponse()
+                        .withStatus(responseStatusCode)
+                        .withStatusMessage(responseStatusMessage)
+                        .withHeader("content-type", "application/soap+xml")
+                        .withBody(soapXmlStringResponse)
+                        .withTransformers("body-transformer")) ;
+        stubs.add(stubFor(stub));
+    }
 }
